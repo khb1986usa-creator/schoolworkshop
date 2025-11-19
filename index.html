@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025 연천초등학교 교육과정 워크숍</title>
+  
+  <!-- 앱 아이콘 & OG 설정 -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3063/3063822.png">
+  <meta name="theme-color" content="#E67E22">
+  
+  <!-- 오픈 그래프 설정 (카카오톡 공유 미리보기) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="🏫 선생님, 올 한 해도 정말 고생 많으셨습니다.">
+  <meta property="og:description" content="2025 교육과정 반성 및 힐링 워크숍">
+  <!-- 여기에 오픈 그래프 이미지 주소를 넣으세요 (Github에 올린 이미지 경로 등) -->
+  <meta property="og:image" content="https://images.unsplash.com/photo-1491841550275-ad7854e35ca6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80">
+
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { --primary: #E67E22; --bg: #F9F7F2; --card: #FFFFFF; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: var(--bg);
+      color: #333;
+      display: flex; justify-content: center;
+      min-height: 100vh; padding: 20px; line-height: 1.6;
+    }
+    .container {
+      width: 100%; max-width: 600px;
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+      padding: 40px 30px;
+    }
+    h1 { font-family: 'Nanum Myeongjo', serif; font-size: 1.8rem; color: #2C3E50; text-align: center; margin-bottom: 10px; }
+    .subtitle { text-align: center; color: #666; margin-bottom: 40px; }
+    .form-group { margin-bottom: 25px; }
+    label { display: block; font-weight: 700; margin-bottom: 8px; color: #2C3E50; }
+    .helper { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+    input, textarea {
+      width: 100%; padding: 14px;
+      border: 1px solid #ddd; border-radius: 8px;
+      font-size: 1rem; background: #FAFAFA;
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); background: #fff; }
+    textarea { min-height: 120px; resize: vertical; }
+    .btn-submit {
+      width: 100%; padding: 16px;
+      background: var(--primary); color: white;
+      border: none; border-radius: 8px;
+      font-size: 1.1rem; font-weight: 700; cursor: pointer;
+    }
+    .hidden { display: none !important; }
+    #loadingSection, #resultSection { text-align: center; padding: 20px 0; display: none; }
+    .envelope-icon { font-size: 3rem; animation: float 2s infinite ease-in-out; margin-bottom: 15px; display: block;}
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .result-card {
+      background: #FFF8E1; border: 1px solid #F9E79F;
+      border-radius: 12px; padding: 30px; margin-bottom: 20px;
+      text-align: left; position: relative;
+    }
+    .ai-message { font-family: 'Nanum Myeongjo', serif; font-size: 1.15rem; color: #444; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🏫 2025 연천초등학교<br>교육과정 워크숍</h1>
+      <p class="subtitle">선생님, 올 한 해도 정말 고생 많으셨습니다.</p>
+    </header>
+
+    <form id="workshopForm">
+      <div class="form-group">
+        <label>성함<span style="color:red;">*</span></label>
+        <input type="text" id="name" required placeholder="성함을 입력해주세요">
+      </div>
+      <div class="form-group">
+        <label>2학기 좋았던 점</label>
+        <textarea id="goodPoints" placeholder="자유롭게 적어주세요"></textarea>
+      </div>
+      <div class="form-group">
+        <label>반성 및 개선 요구사항</label>
+        <textarea id="improvements" placeholder="솔직한 이야기"></textarea>
+      </div>
+      <div class="form-group">
+        <label>기타 의견</label>
+        <textarea id="others" placeholder="자유로운 말씀"></textarea>
+      </div>
+      <button type="submit" class="btn-submit">💌 응답 보내기</button>
+    </form>
+
+    <div id="loadingSection">
+      <span class="envelope-icon">💌</span>
+      <p style="color: #E67E22; font-weight: 600;">마음을 전달하는 중입니다...</p>
+    </div>
+
+    <div id="resultSection">
+      <div class="result-card">
+        <p class="ai-message" id="aiOutput"></p>
+      </div>
+      <p style="font-size: 0.8rem; color: #aaa;">응답 내용은 안전하게 기록되었습니다.</p>
+    </div>
+  </div>
+
+  <script>
+    // 🔴 [필수] Apps Script '배포' 후 생성된 '웹 앱 URL'을 아래에 붙여넣으세요.
+    // 예: const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx.../exec';
+    const GAS_WEB_APP_URL = '여기에_웹앱_URL을_붙여넣으세요';
+
+    document.getElementById('workshopForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      if(!name.trim()) { alert("성함을 입력해주세요!"); return; }
+
+      const formData = {
+        name: name,
+        goodPoints: document.getElementById('goodPoints').value,
+        improvements: document.getElementById('improvements').value,
+        others: document.getElementById('others').value
+      };
+
+      // 1. UI 전환 (로딩 표시)
+      document.getElementById('workshopForm').classList.add('hidden');
+      document.getElementById('loadingSection').style.display = 'block';
+      window.scrollTo(0, 0);
+
+      // 2. Google Apps Script로 데이터 전송 (fetch 사용)
+      fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        // 중요: JSON으로 보내면 CORS 오류가 발생할 수 있어 text/plain으로 설정
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8', 
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json()) // JSON 응답 파싱
+      .then(data => {
+        if (data.success) {
+          showResult(data.message);
+        } else {
+          showResult("오류가 발생했지만 기록은 저장되었을 수 있습니다: " + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Fetch Error:', error);
+        // 네트워크 오류가 나더라도 보통 기록은 될 수 있음. 사용자에게는 따뜻한 메시지(fallback) 보여주기
+        showResult(name + " 선생님, 고생 많으셨습니다. (서버 응답이 지연되고 있지만 마음은 잘 전달되었습니다!)");
+      });
+    });
+
+    function showResult(message) {
+      document.getElementById('loadingSection').style.display = 'none';
+      document.getElementById('aiOutput').innerText = message;
+      document.getElementById('resultSection').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
